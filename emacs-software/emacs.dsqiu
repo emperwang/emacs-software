@@ -1,0 +1,541 @@
+(add-to-list 'load-path "~/.emacs.d/")
+(transient-mark-mode t)
+(setq x-select-enable-clipboard t)
+(set-scroll-bar-mode nil) 
+(tool-bar-mode -1) 
+(setq inhibit-startup-message t) 
+(setq gnus-inhibit-startup-message t)
+(font-lock-mode t)
+
+(add-hook 'after-make-frame-functions
+(lambda (frame)
+(with-selected-frame frame)))
+
+;(setq scroll-margin 0 scroll-conservatively 10000)
+(require 'maxframe)
+(add-hook 'window-setup-hook 'maximize-frame t)
+
+(setq linum-format 
+(lambda (line) (propertize (format (let 
+((w (length (number-to-string (count-lines (point-min) (point-max)))))) 
+(concat "%" (number-to-string w) "d ")) line) 'face 'linum)))
+
+;(require 'line-num)
+(require 'linum)
+(global-linum-mode 1)
+(setq linum-format "%4d")
+(add-hook 'find-file-hooks (lambda () (linum-mode 1)))
+
+
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory "~/.emacs.d/snippets")
+
+(setq ansi-color-for-comint-mode t)
+(customize-group 'ansi-colors)
+(kill-this-buffer)
+
+;; This maps edit keys to standard Windows keystokes. It requires the
+;; Library cua-mode.el from Kim Storm at the following URL:
+;;(add-to-list 'load-path "~/.emacs.d/")
+(require 'cua-mode)
+(cua-mode t)
+
+;; Set foreground and background. black or dimgrey may be choosed
+(set-foreground-color "white")
+(set-background-color "Gray22")
+;(set-background-color "CornflowerBlue")
+;(set-background-color "DarkSlateBlue")
+;(set-background-color "MidnightBlue")
+;(set-background-color "Black")
+
+;; Set the mouse and cursor color
+(set-mouse-color "yellow")
+(set-cursor-color "red")
+
+;(setq Man-overstrike-face 'info-node)
+;(setq Man-underline-face 'info-xref)
+
+
+(setq time-stamp-active t)
+(setq time-stamp-warn-inactive t)
+(setq time-stamp-format "%:y-%02m-%02d %3a %02H:%02M:%02S baiy")
+
+(setq default-fill-column 80)
+
+
+;(setq scroll-margin 3
+;      scroll-conservatively 10000) 
+
+(setq suggest-key-bindings 1)
+
+;(setq dired-recursive-copies t)
+;(setq dired-recursive-deletes t)
+
+(setq user-full-name "dsqiu")
+(setq user-mail-address "dsqiu@ingenic.cn")
+
+;;;;;;folding;;;;;;;
+(load "folding")
+
+;;
+;;;;;;;;yes or no To  y or n;;;;;;;
+(fset 'yes-or-no-p 'y-or-n-p)
+
+
+
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date nil)
+(display-time)
+(add-hook 'comint-output-filter-functions
+	'comint-watch-for-password-prompt)
+
+
+(require 'fillcode)
+(add-hook 'c-mode-common-hook' fillcode-mode)
+
+;;(require 'cc-mode)
+(c-set-offset 'inline-open 0)
+(c-set-offset 'friend '-)
+(c-set-offset 'substatement-open 0)
+
+;;(global-set-key (kbd "M-") 'windmove-up)
+;;(global-set-key (kbd "m-n") 'windmove-down)
+
+(tool-bar-mode -1)
+(setq-default kill-whole-line t)
+(setq require-final-newline t)
+(setq suggest-key-bindings 1)
+
+
+(require 'ido)
+(ido-mode t)
+
+(global-set-key [(meta ?/)] 'hippie-expand)
+(setq hippie-expand-try-functions-list 
+      '(try-expand-dabbrev
+    try-expand-dabbrev-visible
+    try-expand-dabbrev-all-buffers
+ ll    try-expand-dabbrev-from-ki
+ tia   try-complete-file-name-parlly
+       try-complete-file-name    
+       try-expand-all-abbrevs    
+       try-expand-list           
+       try-expand-line           
+ art   try-complete-lisp-symbol-pially
+       try-complete-lisp-symbol))
+
+
+(load-library  "folding")
+(declare (special fold-fold-on-startup
+          fold-keys-already-setup
+          ))
+    
+(setq fold-fold-on-startup t)
+(folding-mode-add-find-file-hook)
+
+(setq fold-keys-already-setup nil)
+(add-hook 'folding-mode-hook
+      (function (lambda()
+              (unless fold-keys-already-setup
+            (setq fold-keys-already-setup t)
+            (define-prefix-command 'ctl-f-folding-mode-prefix)
+            (define-key 'ctl-f-folding-mode-prefix "f" 'fold-fold-region)
+            (define-key  'ctl-f-folding-mode-prefix "e" 'fold-enter)
+            (define-key 'ctl-f-folding-mode-prefix "x" 'fold-exit)
+            (define-key  'ctl-f-folding-mode-prefix "b" 'fold-whole-buffer)
+            (define-key 'ctl-f-folding-mode-prefix "o" 'fold-open-buffer)
+            (define-key 'ctl-f-folding-mode-prefix "h" 'fold-hide)
+            (define-key 'ctl-f-folding-mode-prefix "s" 'fold-show)
+            (define-key 'ctl-f-folding-mode-prefix "t" 'fold-top-level)
+            (define-key 'ctl-f-folding-mode-prefix "f" 'fold-fold-region)
+            )
+              (local-set-key "\C-f" 'ctl-f-folding-mode-prefix))))
+
+(fold-add-to-marks-list 'sgml-mode
+            "<!-- {" 
+             "<!-- } -->" " --> ")
+(fold-add-to-marks-list 'c-mode "/* <" "/* > */" "*/")
+(fold-add-to-marks-list 'c++-mode
+            "//<" "//>" "")
+(fold-add-to-marks-list 'LaTeX-mode "%%% {{{" "%%% }}}" " ")
+(fold-add-to-marks-list 'latex2e-mode "%%% {{{" "%%% }}}" " ")
+(fold-add-to-marks-list 'latex-mode "%%%% {{{" "%%%% }}}" " ")
+(fold-add-to-marks-list 'BibTeX-mode "%%% {{{" "%%% }}}" " ")
+(fold-add-to-marks-list 'lisp-mode ";;; {" ";;; }" "")
+(fold-add-to-marks-list 'lex-mode" /* {{{ " " /* }}} */ " "*/")
+(fold-add-to-marks-list 'html-mode "<!-- { " "<!-- } -->" "-->")
+(fold-add-to-marks-list 'shell-script-mode "# {{{" "# }}}" nil)
+(fold-add-to-marks-list 'sh-mode "# {{{ " "# }}}" nil)
+
+;;}}}
+
+
+(global-set-key "%" 'match-paren)
+          
+(defun match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+    ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+    (t (self-insert-command (or arg 1)))))
+
+(global-set-key [(control ?\.)] 'ska-point-to-register)
+(global-set-key [(control ?\,)] 'ska-jump-to-register)
+
+(setq swbuff-status-window-layout 'scroll)
+(setq swbuff-clear-delay 1)
+(setq swbuff-separator "|")
+(setq swbuff-window-min-text-height 1)
+
+
+(setq sentence-end "\\([¡££¡£¿]\\|¡­¡­\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
+
+;(global-font-lock-mode 't) 
+
+
+(setq visible-bell t) 
+
+
+(setq inhibit-startup-message t) 
+
+
+(setq column-number-mode t) 
+
+
+(show-paren-mode t) 
+(setq show-paren-style 'parentheses) 
+
+
+(setq frame-title-format "emacs@%b") 
+
+(pc-selection-mode) 
+
+(global-font-lock-mode t)
+(setq font-lock-maximum-decoration t)
+(setq search-highlight t)   
+(setq query-replace-highlight t)   
+
+
+
+;; =================================================================
+;; Key Binding
+;; =================================================================
+
+;; Book mark 1
+(global-set-key [f1] 'bookmark-jump-default1)
+(defun bookmark-jump-default1 (pos)
+  "Set a default bookmark 1 default-bookmark1 at current position"
+  (interactive "d")
+  (bookmark-jump "default-bookmark1")
+  (bookmark-set "default-bookmark1"))
+
+(global-set-key [C-f1] 'bookmark-set-default1)
+(defun bookmark-set-default1 (pos)
+  "Jump to the default bookmark 1 default-bookmark1"
+  (interactive "d")
+  (bookmark-set "default-bookmark1"))
+
+;; Book mark 2
+(global-set-key [f2] 'bookmark-jump-default2)
+(defun bookmark-jump-default2 (pos)
+  "Set a default bookmark 2 default-bookmark2 at current position"
+  (interactive "d")
+  (bookmark-jump "default-bookmark2")
+  (bookmark-set "default-bookmark2"))
+
+(global-set-key [C-f2] 'bookmark-set-default2)
+(defun bookmark-set-default2 (pos)
+  "Jump to the default bookmark 2 default-bookmark2"
+  (interactive "d")
+  (bookmark-set "default-bookmark2"))
+
+(global-set-key [S-f2] 'bookmark-jump)
+(global-set-key [S-C-f2] 'bookmark-set)
+
+;; Set the word search keys
+(define-key global-map [f3] 'isearch-forward)
+(define-key isearch-mode-map [f3] 'isearch-repeat-forward)
+(define-key global-map [C-f3] 'isearch-forward-regexp)
+(define-key global-map [S-f3] 'isearch-backward)
+(define-key isearch-mode-map [S-f3] 'isearch-repeat-backward)
+(define-key global-map [C-S-f3] 'isearch-backward-regexp)
+
+;; Kill buffer/emacs
+(global-set-key [C-f4] 'kill-this-buffer)
+(global-set-key [M-f4] 'save-buffers-kill-emacs)
+
+;; Alternative copy/paste
+(global-set-key [f4] 'copy-to-register-t)
+(defun copy-to-register-t (start end)
+  "Copy the selected region into a default register, t"
+  (interactive "r")
+  (copy-to-register t start end)
+  (if transient-mark-mode (setq deactivate-mark t)))
+
+(global-set-key [S-f4] 'insert-register-t)
+(defun insert-register-t (pos)
+  "Insert the contents of default register, t, into current position"
+  (interactive "d")
+  (insert-register t 1))
+
+;; Go to line
+(global-set-key [f5] 'goto-line)
+
+;; Switch windows/buffers
+(global-set-key [f6] 'other-window)
+(global-set-key [C-f6] 'switch-to-buffer)
+(global-set-key [S-f6] 'buffer-menu)
+
+;; Search previour/next issued commend
+(global-set-key [S-f7] 'comint-next-matching-input-from-input)
+(global-set-key [f7] 'comint-previous-matching-input-from-input)
+
+;; Replace
+(global-set-key [f9] 'query-replace)
+(global-set-key [C-f9] 'query-replace-regexp)
+(global-set-key [S-f9] 'query-replace-reg-t)
+
+(defun query-replace-reg-t (to-string)
+  (interactive (let (to)
+		 (setq to (read-from-minibuffer
+			   (format "Query-replace \"%s\" with: "
+				   (get-register t))
+			   nil nil nil
+			   query-replace-to-history-variable nil t))
+		 (list to)))
+  (perform-replace (get-register t) to-string t nil nil))
+
+(global-set-key [f10] 'replace-string)
+(global-set-key [C-f10] 'replace-string-regexp)
+(global-set-key [S-f10] 'replace-string-reg-t)
+
+(defun replace-string-reg-t (to-string)
+  (interactive (let (to)
+		 (setq to (read-from-minibuffer
+			   (format "Replace \"%s\" with: "
+				   (get-register t))
+			   nil nil nil
+			   query-replace-to-history-variable nil t))
+		 (list to)))
+  (perform-replace (get-register t) to-string nil nil nil))
+
+;; Split/combine windows
+(global-set-key [f11] 'delete-other-windows)
+(global-set-key [S-f11] 'delete-window)
+(global-set-key [f12] 'split-window-vertically)
+(global-set-key [S-f12] 'split-window-horizontally)
+
+;; Mouse operation
+(global-set-key [mouse-3] 'mouse-buffer-menu)
+
+;; Common MSWIN like keys
+(global-set-key "\C-o" 'find-file)
+(global-set-key "\C-s" 'save-buffer)
+(global-set-key "\C-p" 'pwd)
+(global-set-key [C-backspace] 'backward-kill-word)
+(global-set-key [C-delete] 'kill-word)
+(global-set-key "\C-d" 'kill-whole-line)
+(defun kill-whole-line ()
+  "Kill the whole line the cursor located"
+  (interactive)
+  (beginning-of-line nil)
+  (kill-line nil)
+  (kill-line nil))
+  
+(shell)
+(rename-buffer "make-shell")
+(shell)
+(rename-buffer "boot-shell")
+(shell)
+(rename-buffer "kernel-shell")
+(shell)
+(rename-buffer "work-shell")
+
+(add-to-list 'load-path "~/.emacs.d/")
+(require 'auto-complete)
+(global-auto-complete-mode t)
+(define-key ac-complete-mode-map "\C-n" 'ac-next)
+(define-key ac-complete-mode-map "\C-p" 'ac-previous)
+(setq ac-auto-start 3)
+(define-key ac-complete-mode-map "\t" 'ac-complete)
+(define-key ac-complete-mode-map "\r" nil)
+
+;(add-to-list 'load-path "~/.emacs.d/ecb-2.40")
+;(add-to-list 'load-path "/usr/share/emacs/site-list/ecb")
+;(require 'ecb)
+
+;;----------------------------------
+(put 'scroll-left 'disabled nil)
+(set-language-environment 'Chinese-GB)
+(set-keyboard-coding-system 'euc-cn)
+(set-clipboard-coding-system 'euc-cn)
+(set-terminal-coding-system 'euc-cn)
+(set-buffer-file-coding-system 'euc-cn)
+(set-selection-coding-system 'euc-cn)
+(modify-coding-system-alist 'process "*" 'euc-cn)
+(setq default-process-coding-system 
+            '(euc-cn . euc-cn))
+(setq-default pathname-coding-system 'euc-cn)
+
+
+;; other customizations 
+(setq indent-tabs-mode nil)
+(setq default-tab-width 8)
+(setq tab-width 8)
+
+(defun linux-c-mode ()
+	"C mode with adjusted defaults for use with the Linux kernel."
+	(interactive)
+	(c-mode)
+	(c-set-style "K&R")
+	(setq tab-width 8)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 8)
+)
+
+(defun	my-c-mode ()
+	"C mode with adjusted defaults for use with the C sources."
+	(interactive)
+	(c-mode)
+	(c-set-style "K&R")
+	(setq tab-width 4)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 4)
+;;	(setq c-basic-offset 0)
+)
+
+(defun	my-c++-mode ()
+	"C++ mode with adjusted defaults for use with the C++ sources."
+	(interactive)
+	(c++-mode)
+	(c-set-style "K&R")
+	(setq tab-width 4)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 4)
+)
+
+(defun	my-asm-mode ()
+	"ASM mode with adjusted defaults for use with the asm sources."
+	(interactive)
+	(asm-mode)
+	(setq tab-width 8)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 8)
+)
+
+(setq auto-mode-alist (cons '(".*\\.\\(inl$\\|cxx$\\|hxx$\\|cpp$\\|hpp$\\)" .
+			my-c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".*\\.\\(inc$\\|[Ss]$\\)" .
+			my-asm-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".*\\.\\(inl$\\|c$\\|h$\\)" .
+			my-c-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".*/*linux.*/+.*\\.[ch]$" .
+			linux-c-mode) auto-mode-alist))
+
+;; Load CEDET
+(load-file "~/.emacs.d/cedet/common/cedet.el")
+
+;; * This enables some tools useful for coding, such as summary mode
+;;   imenu support, and the semantic navigator
+;;(semantic-load-enable-code-helpers)
+(semantic-load-enable-excessive-code-helpers)
+
+;(global-ede-mode t)
+;(require 'semantic-ia)
+(require 'semantic-gcc)
+;(global-srecode-minor-mode 1)
+
+
+;;;; 使函数体能够折叠或展开
+
+;; Enable source code folding
+
+(global-semantic-tag-folding-mode 1)
+
+ 
+
+;; Key bindings
+
+(defun my-cedet-hook ()
+
+  (local-set-key [(control return)] 'semantic-ia-complete-symbol)
+
+  (local-set-key "M-?" 'semantic-ia-complete-symbol-menu)
+
+  (local-set-key "M-d" 'semantic-ia-fast-jump)
+
+  (local-set-key "M-r" 'semantic-symref-symbol)
+
+  (local-set-key "M-R" 'semantic-symref))
+
+(add-hook 'c-mode-common-hook 'my-cedet-hook)
+
+ 
+
+;;;; 当输入"."或">"时，在另一个窗口中列出结构体或类的成员
+
+(defun my-c-mode-cedet-hook ()
+
+  (local-set-key "." 'semantic-complete-self-insert)
+
+  (local-set-key ">" 'semantic-complete-self-insert))
+
+(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+
+
+;; * This enables even more coding tools such as the nascent intellisense mode
+;;   decoration mode, and stickyfunc mode (plus regular code helpers)
+;; (semantic-load-enable-guady-code-helpers)
+
+;; * This turns on which-func support (Plus all other code helpers)
+;; (semantic-load-enable-excessive-code-helpers)
+
+;; This turns on modes that aid in grammar writing and semantic tool
+;; development.  It does not enable any other features such as code
+;; helpers above.
+;; (semantic-load-enable-semantic-debugging-helpers)
+
+(add-to-list 'load-path "~/.emacs.d/ecb-2.40")
+(require 'ecb-autoloads)
+
+;;;; 各窗口间切换
+
+(global-set-key [M-left] 'windmove-left)
+
+(global-set-key [M-right] 'windmove-right)
+
+(global-set-key [M-up] 'windmove-up)
+
+(global-set-key [M-down] 'windmove-down) 
+
+ 
+
+;;;; 隐藏和显示ecb窗口
+
+;;(define-key global-map [(control f1)] 'ecb-hide-ecb-windows)
+
+;;(define-key global-map [(control f2)] 'ecb-show-ecb-windows)
+
+;;;; 使某一ecb窗口最大化
+
+;(define-key global-map "\C-c1" 'ecb-maximize-window-directories)
+
+;(define-key global-map "\C-c2" 'ecb-maximize-window-sources)
+
+;(define-key global-map "\C-c3" 'ecb-maximize-window-methods)
+
+;(define-key global-map "\C-c4" 'ecb-maximize-window-history)
+
+;;;; 恢复原始窗口布局
+;; color theme
+(add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0")
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)))
+
+
+;(define-key global-map "\C-c`" 'ecb-restore-default-window-sizes)
+
+

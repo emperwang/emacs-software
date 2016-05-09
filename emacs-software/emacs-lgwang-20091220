@@ -1,0 +1,204 @@
+;; .emacs
+
+;; Don't display menu bar. Type M-x menu-bar-mode to display it
+(menu-bar-mode '-1)
+;; Don't display tool bar. Type M-x tool-bar-mode to display it
+(if (not (equal (getenv "HOSTTYPE") "sparc"))
+    (tool-bar-mode '-1))
+
+(defun linux-c-mode ()
+	"C mode with adjusted defaults for use with the Linux kernel."
+	(interactive)
+	(c-mode)
+	(c-set-style "K&R")
+	(setq tab-width 8)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 8)
+)
+
+(defun	my-c-mode ()
+	"C mode with adjusted defaults for use with the C sources."
+	(interactive)
+	(c-mode)
+	(c-set-style "K&R")
+	(setq tab-width 4)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 4)
+;;	(setq c-basic-offset 0)
+)
+
+(defun	my-c++-mode ()
+	"C++ mode with adjusted defaults for use with the C++ sources."
+	(interactive)
+	(c++-mode)
+	(c-set-style "K&R")
+	(setq tab-width 4)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 4)
+)
+
+(defun	my-asm-mode ()
+	"ASM mode with adjusted defaults for use with the asm sources."
+	(interactive)
+	(asm-mode)
+	(setq tab-width 8)
+	(setq indent-tabs-mode t)
+	(setq c-basic-offset 8)
+)
+
+(setq auto-mode-alist (cons '(".*\\.\\(inl$\\|cxx$\\|hxx$\\|cpp$\\|hpp$\\)" .
+			my-c++-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".*\\.\\(inc$\\|[Ss]$\\)" .
+			my-asm-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".*\\.\\(inl$\\|c$\\|h$\\)" .
+			my-c-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '(".*/*linux.*/+.*\\.[ch]$" .
+			linux-c-mode) auto-mode-alist))
+
+;; Add color to a shell running in emacs ‘M-x shell’
+;;(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+;;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;;Then set the colors:
+
+;;(custom-set-faces
+;; custom-set-faces was added by Custom — don’t edit or cut/paste it!
+;; Your init file should contain only one such instance.
+;;'(comint-highlight-prompt ((t (:foreground "white")))))
+
+
+
+;;(add-to-list 'load-path "~/.emacs.d/color-theme-6.6.0")
+;;(require 'color-theme)
+;;(color-theme-initialize)
+;;(color-theme-oswald)
+
+
+
+;;(require 'ansi-color)
+;;(ansi-color-for-comint-mode-on)
+;;(shell)
+
+
+;;(setq ansi-color-names-vector ; better contrast colors
+;;      ["black" "red4" "green4" "yellow4"
+;;       "blue3" "magenta4" "cyan4" "white"])
+;;(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+
+;;(setq eshell-ask-to-save-history 'always)
+(setq eshell-save-history-on-exit t)
+
+
+;;(setq witch-function-mode t)
+;;(setq which-function-mode t)
+(which-func-mode)
+
+;; This maps edit keys to standard Windows keystokes. It requires the
+;; library cua-mode.el from Kim Storm at the following URL:
+;;(load "~/1memos/cua-mode.el")
+;;(CUA-mode t)
+
+;; Set foreground and background. black or dimgrey may be choosed
+;;(set-foreground-color "white")
+;;(set-foreground-color "lightgreen")
+(set-foreground-color "tan")
+;;(set-background-color "Gray22")
+(set-background-color "Black")
+;(set-background-color "CornflowerBlue")
+;(set-background-color "DarkSlateBlue")
+;(set-background-color "MidnightBlue")
+;(set-background-color "Black")
+
+;; Set the mouse and cursor color
+;;(set-mouse-color "green")
+(set-cursor-color "green")
+
+(setq Man-overstrike-face 'info-node)
+(setq Man-underline-face 'info-xref)
+
+;;(shell)
+;;(rename-buffer "make-shell")
+(shell)
+(rename-buffer "1111-shell")
+(shell)
+(rename-buffer "2222-shell")
+(eshell)
+(rename-buffer "boot-shell")
+(eshell)
+(rename-buffer "kernel-shell")
+(eshell)
+(rename-buffer "nfsroot-shell")
+(eshell)
+(rename-buffer "work-shell")
+
+(eshell)
+(rename-buffer "ffff-shell")
+(eshell)
+(rename-buffer "eeee-shell")
+(eshell)
+(rename-buffer "dddd-shell")
+(eshell)
+(rename-buffer "cccc-shell")
+(eshell)
+(rename-buffer "bbbb-shell")
+(eshell)
+(rename-buffer "aaaa-shell")
+
+
+(show-paren-mode)
+(global-auto-revert-mode)
+
+;;; uncomment this line to disable loading of "default.el" at startup
+;;(setq inhibit-default-init t)
+
+;; turn on font-lock mode
+(when (fboundp 'global-font-lock-mode)
+  (global-font-lock-mode t))
+
+;; enable visual feedback on selections
+(setq transient-mark-mode t)
+
+;; default to better frame titles
+(setq frame-title-format
+      (concat  "%b - emacs@" system-name))
+
+(add-hook 'comint-output-filter-functions
+	'comint-watch-for-password-prompt)
+
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date nil)
+(display-time)
+
+(column-number-mode t)
+
+(setq make-backup-files nil)
+
+;;(custom-set-variables '(next-line-add-newlines nil))
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(auto-compression-mode t nil (jka-compr))
+ '(case-fold-search t)
+ '(current-language-environment "UTF-8")
+ '(default-input-method "rfc1345")
+ '(global-font-lock-mode t nil (font-lock))
+ '(next-line-add-newlines nil)
+ '(safe-local-variable-values (quote ((sh-indentation . 2))))
+ '(show-paren-mode t nil (paren))
+ '(transient-mark-mode t))
+
+(setq ps-font-size 8)
+(defun my-ps-print-buffer()
+	(interactive)
+	(message "  print ... ")
+	(setq filename "~/tmp/1.ps")
+	(ps-print-buffer-with-faces filename))
+
+(global-set-key "\M-\C-p" 'my-ps-print-buffer)
+(global-set-key "\C-g" 'goto-line)
+
+(put 'scroll-left 'disabled nil)
